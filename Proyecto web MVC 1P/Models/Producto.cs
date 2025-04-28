@@ -1,40 +1,47 @@
 ﻿namespace Proyecto_web_MVC_1P.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
-    public class Producto
+    namespace Proyecto_web_MVC_1P.Models
     {
-        [Key]
-        public int IdProducto { get; set; }
+        public class Producto
+        {
+            [Key]
+            public int Id { get; set; }
 
-        [Required]
-        public int IdUsuario { get; set; } 
+            [Required]
+            public int UsuarioId { get; set; }
 
-        [Required]
-        [MaxLength(200)]
-        public string NombreProducto { get; set; }
+            [ForeignKey("UsuarioId")]
+            public Usuario? Usuario { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Descripcion { get; set; }
+            [Required]
+            [MaxLength(100)]
+            public string NombreProducto { get; set; }
 
-        [Required]
-        [Range(0, 99999)]
-        public decimal Precio { get; set; }
+            [Required]
+            [MaxLength(240)]
+            public string Descripcion { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string TipoProducto { get; set; } 
+            [Required]
+            public float Precio { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Categoria { get; set; }
+            [Required]
+            [MaxLength(50)]
+            public string TipoProducto { get; set; }
 
-        [MaxLength(500)]
-        public string? ImagenUrl { get; set; }
+            [Required]
+            [MaxLength(100)]
+            public string Categoria { get; set; }
 
-        public DateTime FechaPublicacion { get; set; } = DateTime.Now;
+            [MaxLength(240)]
+            public string ImagenUrl { get; set; }
 
-        public bool Disponibilidad { get; set; } = true;
+            public DateTime FechaPublicacion { get; set; } = DateTime.Now;
+
+            public bool Disponibilidad { get; set; }
+        }
     }
+
 }

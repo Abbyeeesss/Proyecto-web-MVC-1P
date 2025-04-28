@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Proyecto_web_MVC_1P.Models.Usuario>
+﻿@model IEnumerable<Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Usuario>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,25 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.NombreUsuario)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Correo)
+                @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Contraseña)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RedesSociales)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EsVendedor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EsComprador)
+                @Html.DisplayNameFor(model => model.Telefono)
             </th>
             <th></th>
         </tr>
@@ -40,30 +31,21 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
+                @Html.DisplayFor(modelItem => item.NombreUsuario)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Correo)
+                @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Contraseña)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
+                @Html.DisplayFor(modelItem => item.Telefono)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.RedesSociales)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EsVendedor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EsComprador)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdUsuario">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdUsuario">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdUsuario">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

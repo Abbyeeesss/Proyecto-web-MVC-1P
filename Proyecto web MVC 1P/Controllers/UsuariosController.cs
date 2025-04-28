@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Proyecto_web_MVC_1P.Data;
-using Proyecto_web_MVC_1P.Models;
+using Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models;
 
 namespace Proyecto_web_MVC_1P.Controllers
 {
     public class UsuariosController : Controller
     {
-        private readonly Proyecto_web_MVC_1PContext _context;
+        private readonly ProyectoWebMVCP1Context _context;
 
-        public UsuariosController(Proyecto_web_MVC_1PContext context)
+        public UsuariosController(ProyectoWebMVCP1Context context)
         {
             _context = context;
         }
@@ -34,7 +33,7 @@ namespace Proyecto_web_MVC_1P.Controllers
             }
 
             var usuario = await _context.Usuario
-                .FirstOrDefaultAsync(m => m.IdUsuario == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
                 return NotFound();
@@ -54,7 +53,7 @@ namespace Proyecto_web_MVC_1P.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdUsuario,Nombre,Correo,Contraseña,Descripcion,RedesSociales,EsVendedor,EsComprador")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Id,NombreUsuario,Email,Contraseña,Telefono")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +85,9 @@ namespace Proyecto_web_MVC_1P.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdUsuario,Nombre,Correo,Contraseña,Descripcion,RedesSociales,EsVendedor,EsComprador")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NombreUsuario,Email,Contraseña,Telefono")] Usuario usuario)
         {
-            if (id != usuario.IdUsuario)
+            if (id != usuario.Id)
             {
                 return NotFound();
             }
@@ -102,7 +101,7 @@ namespace Proyecto_web_MVC_1P.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsuarioExists(usuario.IdUsuario))
+                    if (!UsuarioExists(usuario.Id))
                     {
                         return NotFound();
                     }
@@ -125,7 +124,7 @@ namespace Proyecto_web_MVC_1P.Controllers
             }
 
             var usuario = await _context.Usuario
-                .FirstOrDefaultAsync(m => m.IdUsuario == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (usuario == null)
             {
                 return NotFound();
@@ -151,7 +150,7 @@ namespace Proyecto_web_MVC_1P.Controllers
 
         private bool UsuarioExists(int id)
         {
-            return _context.Usuario.Any(e => e.IdUsuario == id);
+            return _context.Usuario.Any(e => e.Id == id);
         }
     }
 }

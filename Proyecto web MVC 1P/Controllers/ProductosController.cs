@@ -5,27 +5,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Proyecto_web_MVC_1P.Data;
-using Proyecto_web_MVC_1P.Models;
+using Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models;
 
 namespace Proyecto_web_MVC_1P.Controllers
 {
-    public class CarritoesController : Controller
+    public class ProductosController : Controller
     {
-        private readonly Proyecto_web_MVC_1PContext _context;
+        private readonly ProyectoWebMVCP1Context _context;
 
-        public CarritoesController(Proyecto_web_MVC_1PContext context)
+        public ProductosController(ProyectoWebMVCP1Context context)
         {
             _context = context;
         }
 
-        // GET: Carritoes
+        // GET: Productos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Carrito.ToListAsync());
+            var proyectoWebMVCP1Context = _context.Producto.Include(p => p.Usuario);
+            return View(await proyectoWebMVCP1Context.ToListAsync());
         }
 
-        // GET: Carritoes/Details/5
+        // GET: Productos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,42 @@ namespace Proyecto_web_MVC_1P.Controllers
                 return NotFound();
             }
 
-            var carrito = await _context.Carrito
-                .FirstOrDefaultAsync(m => m.IdCarrito == id);
-            if (carrito == null)
+            var producto = await _context.Producto
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            return View(carrito);
+            return View(producto);
         }
 
-        // GET: Carritoes/Create
+        // GET: Productos/Create
         public IActionResult Create()
         {
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario");
             return View();
         }
 
-        // POST: Carritoes/Create
+        // POST: Productos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCarrito,IdUsuario")] Carrito carrito)
+        public async Task<IActionResult> Create([Bind("Id,UsuarioId,NombreProducto,Descripcion,Precio,TipoProducto,Categoria,ImagenUrl,FechaPublicacion,Disponibilidad")] Producto producto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(carrito);
+                _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(carrito);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", producto.UsuarioId);
+            return View(producto);
         }
 
-        // GET: Carritoes/Edit/5
+        // GET: Productos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +76,23 @@ namespace Proyecto_web_MVC_1P.Controllers
                 return NotFound();
             }
 
-            var carrito = await _context.Carrito.FindAsync(id);
-            if (carrito == null)
+            var producto = await _context.Producto.FindAsync(id);
+            if (producto == null)
             {
                 return NotFound();
             }
-            return View(carrito);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", producto.UsuarioId);
+            return View(producto);
         }
 
-        // POST: Carritoes/Edit/5
+        // POST: Productos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCarrito,IdUsuario")] Carrito carrito)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UsuarioId,NombreProducto,Descripcion,Precio,TipoProducto,Categoria,ImagenUrl,FechaPublicacion,Disponibilidad")] Producto producto)
         {
-            if (id != carrito.IdCarrito)
+            if (id != producto.Id)
             {
                 return NotFound();
             }
@@ -97,12 +101,12 @@ namespace Proyecto_web_MVC_1P.Controllers
             {
                 try
                 {
-                    _context.Update(carrito);
+                    _context.Update(producto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarritoExists(carrito.IdCarrito))
+                    if (!ProductoExists(producto.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +117,11 @@ namespace Proyecto_web_MVC_1P.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(carrito);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", producto.UsuarioId);
+            return View(producto);
         }
 
-        // GET: Carritoes/Delete/5
+        // GET: Productos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +129,35 @@ namespace Proyecto_web_MVC_1P.Controllers
                 return NotFound();
             }
 
-            var carrito = await _context.Carrito
-                .FirstOrDefaultAsync(m => m.IdCarrito == id);
-            if (carrito == null)
+            var producto = await _context.Producto
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            return View(carrito);
+            return View(producto);
         }
 
-        // POST: Carritoes/Delete/5
+        // POST: Productos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var carrito = await _context.Carrito.FindAsync(id);
-            if (carrito != null)
+            var producto = await _context.Producto.FindAsync(id);
+            if (producto != null)
             {
-                _context.Carrito.Remove(carrito);
+                _context.Producto.Remove(producto);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CarritoExists(int id)
+        private bool ProductoExists(int id)
         {
-            return _context.Carrito.Any(e => e.IdCarrito == id);
+            return _context.Producto.Any(e => e.Id == id);
         }
     }
 }

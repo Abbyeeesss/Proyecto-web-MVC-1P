@@ -2,31 +2,29 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class Usuario
+    namespace Proyecto_web_MVC_1P.Models
     {
-        [Key]
-        public int IdUsuario { get; set; }
+        public class Usuario
+        {
+            [Key]
+            public int Id { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Nombre { get; set; }
+            [Required]
+            [MaxLength(100)]
+            public string NombreUsuario { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [MaxLength(150)]
-        public string Correo { get; set; }
+            [Required]
+            [EmailAddress]
+            [MaxLength(100)]
+            public string Email { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Contraseña { get; set; }
-
-        [MaxLength(500)]
-        public string? Descripcion { get; set; }
-
-        [MaxLength(250)]
-        public string? RedesSociales { get; set; }
-
-        public bool EsVendedor { get; set; }
-        public bool EsComprador { get; set; }
+            [Required]
+            [MaxLength(100)]
+            public string Contraseña { get; set; }
+            
+            [Required]
+            [Phone]
+            public string Telefono { get; set; }
+        }
     }
 }

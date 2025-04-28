@@ -1,4 +1,4 @@
-﻿@model Proyecto_web_MVC_1P.Models.Compra
+﻿@model Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Compra
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,10 +12,16 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdUsuarioComprador)
+            @Html.DisplayNameFor(model => model.Usuario)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUsuarioComprador)
+            @Html.DisplayFor(model => model.Usuario.Contraseña)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Producto)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Producto.Categoria)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FechaCompra)
@@ -23,16 +29,10 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FechaCompra)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalCompra)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TotalCompra)
-        </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="IdCompra" />
+        <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

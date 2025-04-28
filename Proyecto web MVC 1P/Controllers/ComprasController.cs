@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Proyecto_web_MVC_1P.Data;
-using Proyecto_web_MVC_1P.Models;
+using Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models;
 
 namespace Proyecto_web_MVC_1P.Controllers
 {
     public class ComprasController : Controller
     {
-        private readonly Proyecto_web_MVC_1PContext _context;
+        private readonly ProyectoWebMVCP1Context _context;
 
-        public ComprasController(Proyecto_web_MVC_1PContext context)
+        public ComprasController(ProyectoWebMVCP1Context context)
         {
             _context = context;
         }
@@ -22,7 +21,8 @@ namespace Proyecto_web_MVC_1P.Controllers
         // GET: Compras
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Compra.ToListAsync());
+            var proyectoWebMVCP1Context = _context.Compra.Include(c => c.Producto).Include(c => c.Usuario);
+            return View(await proyectoWebMVCP1Context.ToListAsync());
         }
 
         // GET: Compras/Details/5
@@ -34,7 +34,9 @@ namespace Proyecto_web_MVC_1P.Controllers
             }
 
             var compra = await _context.Compra
-                .FirstOrDefaultAsync(m => m.IdCompra == id);
+                .Include(c => c.Producto)
+                .Include(c => c.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (compra == null)
             {
                 return NotFound();
@@ -46,6 +48,8 @@ namespace Proyecto_web_MVC_1P.Controllers
         // GET: Compras/Create
         public IActionResult Create()
         {
+            ViewData["ProductoId"] = new SelectList(_context.Producto, "Id", "Categoria");
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario");
             return View();
         }
 
@@ -54,7 +58,7 @@ namespace Proyecto_web_MVC_1P.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCompra,IdUsuarioComprador,FechaCompra,TotalCompra")] Compra compra)
+        public async Task<IActionResult> Create([Bind("Id,UsuarioId,ProductoId,FechaCompra")] Compra compra)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +66,8 @@ namespace Proyecto_web_MVC_1P.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProductoId"] = new SelectList(_context.Producto, "Id", "Categoria", compra.ProductoId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", compra.UsuarioId);
             return View(compra);
         }
 
@@ -78,6 +84,8 @@ namespace Proyecto_web_MVC_1P.Controllers
             {
                 return NotFound();
             }
+            ViewData["ProductoId"] = new SelectList(_context.Producto, "Id", "Categoria", compra.ProductoId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", compra.UsuarioId);
             return View(compra);
         }
 
@@ -86,9 +94,9 @@ namespace Proyecto_web_MVC_1P.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCompra,IdUsuarioComprador,FechaCompra,TotalCompra")] Compra compra)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UsuarioId,ProductoId,FechaCompra")] Compra compra)
         {
-            if (id != compra.IdCompra)
+            if (id != compra.Id)
             {
                 return NotFound();
             }
@@ -102,7 +110,7 @@ namespace Proyecto_web_MVC_1P.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompraExists(compra.IdCompra))
+                    if (!CompraExists(compra.Id))
                     {
                         return NotFound();
                     }
@@ -113,6 +121,8 @@ namespace Proyecto_web_MVC_1P.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProductoId"] = new SelectList(_context.Producto, "Id", "Categoria", compra.ProductoId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", compra.UsuarioId);
             return View(compra);
         }
 
@@ -125,7 +135,9 @@ namespace Proyecto_web_MVC_1P.Controllers
             }
 
             var compra = await _context.Compra
-                .FirstOrDefaultAsync(m => m.IdCompra == id);
+                .Include(c => c.Producto)
+                .Include(c => c.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (compra == null)
             {
                 return NotFound();
@@ -151,7 +163,7 @@ namespace Proyecto_web_MVC_1P.Controllers
 
         private bool CompraExists(int id)
         {
-            return _context.Compra.Any(e => e.IdCompra == id);
+            return _context.Compra.Any(e => e.Id == id);
         }
     }
 }

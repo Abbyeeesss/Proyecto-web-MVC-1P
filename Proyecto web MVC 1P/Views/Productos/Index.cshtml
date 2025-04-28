@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Proyecto_web_MVC_1P.Models.Producto>
+﻿@model IEnumerable<Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Producto>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
+                @Html.DisplayNameFor(model => model.Usuario)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NombreProducto)
@@ -46,7 +46,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUsuario)
+                @Html.DisplayFor(modelItem => item.Usuario.Contraseña)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NombreProducto)
@@ -73,9 +73,9 @@
                 @Html.DisplayFor(modelItem => item.Disponibilidad)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdProducto">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdProducto">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdProducto">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

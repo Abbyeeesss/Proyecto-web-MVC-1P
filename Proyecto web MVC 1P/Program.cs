@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Proyecto_web_MVC_1P.Data;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<Proyecto_web_MVC_1PContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Proyecto_web_MVC_1PContext") ?? throw new InvalidOperationException("Connection string 'Proyecto_web_MVC_1PContext' not found.")));
+builder.Services.AddDbContext<ProyectoWebMVCP1Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoWebMVCP1Context") ?? throw new InvalidOperationException("Connection string 'ProyectoWebMVCP1Context' not found.")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
