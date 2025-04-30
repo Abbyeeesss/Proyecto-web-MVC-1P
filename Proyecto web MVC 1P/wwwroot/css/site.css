@@ -18,5 +18,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+    margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
 }
