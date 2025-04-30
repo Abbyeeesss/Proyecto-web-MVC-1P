@@ -1,83 +1,89 @@
 ﻿@model IEnumerable<Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Producto>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NombreProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagenUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaPublicacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Disponibilidad)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Contraseña)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombreProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categoria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagenUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaPublicacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Disponibilidad)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Usuario)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.NombreProducto)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Descripcion)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Precio)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.TipoProducto)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Categoria)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ImagenUrl)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.FechaPublicacion)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Disponibilidad)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Usuario.Contraseña)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.NombreProducto)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Descripcion)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Precio)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.TipoProducto)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Categoria)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ImagenUrl)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.FechaPublicacion)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Disponibilidad)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Editar</a> |
+					<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary">Detalles</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
+
+<p>
+	<a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+@section Styles {
+	<link href="@Url.Content("~/css/index.css")" rel="stylesheet" />
+}

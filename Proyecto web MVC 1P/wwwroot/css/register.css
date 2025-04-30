@@ -1,0 +1,114 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
+    margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 2em;
+}
+
+form {
+    width: 100%;
+}
+
+.form-box.register {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    width: 500px;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.input-box {
+    position: relative;
+    margin: 30px 0;
+}
+
+    .input-box label {
+        display: block;
+        color: #555;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+
+    .input-box input {
+        width: 100%;
+        padding: 13px 50px 13px 20px;
+        background: #eee;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #333;
+        font-weight: 500;
+    }
+
+        .input-box input::placeholder {
+            color: #888;
+            font-weight: 400;
+        }
+
+    .input-box i {
+        position: absolute;
+        right: 20px;
+        top: 65%;
+        transform: translateY(-50%);
+        font-size: 20px;
+    }
+
+p {
+    text-align: center;
+    color: #777;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 0.85em;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+}
+
+    .social-icons i {
+        display: inline-flex;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        font-size: 24px;
+        color: #333;
+        margin: 0 8px;
+    }
+
+        .social-icons i:hover {
+            background-color: #f0f0f0;
+            border-color: #bbb;
+        }
+
+button {
+    display: block;
+    width: 150px; 
+    align-self: center;
+}
+
