@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models;
 using Proyecto_web_MVC_1P.DTOs;
+using Proyecto_web_MVC_1P.Services;
 
 namespace Proyecto_web_MVC_1P.Controllers.Api
 {
@@ -9,50 +8,45 @@ namespace Proyecto_web_MVC_1P.Controllers.Api
     [ApiController]
     public class UsuariosApiController : ControllerBase
     {
-        private readonly ProyectoWebMVCP1Context _context;
+        private readonly IUsuarioService _usuarioService;
 
-        public UsuariosApiController(ProyectoWebMVCP1Context context)
+        public UsuariosApiController(IUsuarioService usuarioService)
         {
-            _context = context;
+            _usuarioService = usuarioService;
         }
 
         // GET: api/UsuariosApi
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UsuarioDto>>> GetUsuarios()
         {
-            var usuarios = await _context.Usuario
-                .Select(u => new UsuarioDto
-                {
-                    Id = u.Id,
-                    NombreUsuario = u.NombreUsuario,
-                    Email = u.Email,
-                    Telefono = u.Telefono
-                })
-                .ToListAsync();
-
-            return Ok(usuarios);
+            try
+            {
+                var usuarios = await _usuarioService.GetAllUsuariosAsync();
+                return Ok(usuarios);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error interno del servidor", details = ex.Message });
+            }
         }
 
         // GET: api/UsuariosApi/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UsuarioDto>> GetUsuario(int id)
         {
-            var usuario = await _context.Usuario.FindAsync(id);
-
-            if (usuario == null)
+            try
             {
-                return NotFound(new { message = "Usuario no encontrado" });
+                var usuario = await _usuarioService.GetUsuarioByIdAsync(id);
+                if (usuario == null)
+                {
+                    return NotFound(new { message = "Usuario no encontrado" });
+                }
+                return Ok(usuario);
             }
-
-            var usuarioDto = new UsuarioDto
+            catch (Exception ex)
             {
-                Id = usuario.Id,
-                NombreUsuario = usuario.NombreUsuario,
-                Email = usuario.Email,
-                Telefono = usuario.Telefono
-            };
-
-            return Ok(usuarioDto);
+                return StatusCode(500, new { message = "Error interno del servidor", details = ex.Message });
+            }
         }
 
         // POST: api/UsuariosApi
@@ -64,32 +58,19 @@ namespace Proyecto_web_MVC_1P.Controllers.Api
                 return BadRequest(ModelState);
             }
 
-            // Verificar si el email ya existe
-            if (await _context.Usuario.AnyAsync(u => u.Email == createUsuarioDto.Email))
+            try
             {
-                return BadRequest(new { message = "El email ya está registrado" });
+                var usuario = await _usuarioService.CreateUsuarioAsync(createUsuarioDto);
+                return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
             }
-
-            var usuario = new Usuario
+            catch (InvalidOperationException ex)
             {
-                NombreUsuario = createUsuarioDto.NombreUsuario,
-                Email = createUsuarioDto.Email,
-                Contraseña = createUsuarioDto.Contraseña,
-                Telefono = createUsuarioDto.Telefono
-            };
-
-            _context.Usuario.Add(usuario);
-            await _context.SaveChangesAsync();
-
-            var usuarioDto = new UsuarioDto
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
             {
-                Id = usuario.Id,
-                NombreUsuario = usuario.NombreUsuario,
-                Email = usuario.Email,
-                Telefono = usuario.Telefono
-            };
-
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuarioDto);
+                return StatusCode(500, new { message = "Error interno del servidor", details = ex.Message });
+            }
         }
 
         // PUT: api/UsuariosApi/5
@@ -101,71 +82,46 @@ namespace Proyecto_web_MVC_1P.Controllers.Api
                 return BadRequest(ModelState);
             }
 
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound(new { message = "Usuario no encontrado" });
-            }
-
-            // Verificar si el email ya existe en otro usuario
-            if (await _context.Usuario.AnyAsync(u => u.Email == updateUsuarioDto.Email && u.Id != id))
-            {
-                return BadRequest(new { message = "El email ya está registrado por otro usuario" });
-            }
-
-            usuario.NombreUsuario = updateUsuarioDto.NombreUsuario;
-            usuario.Email = updateUsuarioDto.Email;
-            usuario.Telefono = updateUsuarioDto.Telefono;
-
-            if (!string.IsNullOrEmpty(updateUsuarioDto.Contraseña))
-            {
-                usuario.Contraseña = updateUsuarioDto.Contraseña;
-            }
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UsuarioExists(id))
+                var result = await _usuarioService.UpdateUsuarioAsync(id, updateUsuarioDto);
+                if (!result)
                 {
-                    return NotFound();
+                    return NotFound(new { message = "Usuario no encontrado" });
                 }
-                throw;
+                return NoContent();
             }
-
-            return NoContent();
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error interno del servidor", details = ex.Message });
+            }
         }
 
         // DELETE: api/UsuariosApi/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario == null)
+            try
             {
-                return NotFound(new { message = "Usuario no encontrado" });
+                var result = await _usuarioService.DeleteUsuarioAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Usuario no encontrado" });
+                }
+                return NoContent();
             }
-
-            // Verificar si el usuario tiene productos o compras asociadas
-            var tieneProductos = await _context.Producto.AnyAsync(p => p.UsuarioId == id);
-            var tieneCompras = await _context.Compra.AnyAsync(c => c.UsuarioId == id);
-
-            if (tieneProductos || tieneCompras)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest(new { message = "No se puede eliminar el usuario porque tiene productos o compras asociadas" });
+                return BadRequest(new { message = ex.Message });
             }
-
-            _context.Usuario.Remove(usuario);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool UsuarioExists(int id)
-        {
-            return _context.Usuario.Any(e => e.Id == id);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error interno del servidor", details = ex.Message });
+            }
         }
     }
 }

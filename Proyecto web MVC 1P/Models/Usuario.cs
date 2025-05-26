@@ -21,10 +21,14 @@
             [Required]
             [MaxLength(100)]
             public string Contraseña { get; set; }
-            
+
             [Required]
             [Phone]
             public string Telefono { get; set; }
+
+            // Navigation Properties
+            public virtual ICollection<Producto> Productos { get; set; } = new List<Producto>();
+            public virtual ICollection<Compra> Compras { get; set; } = new List<Compra>();
         }
     }
 }

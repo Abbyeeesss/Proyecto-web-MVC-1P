@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Proyecto_web_MVC_1P.Interfaces;
+using Proyecto_web_MVC_1P.Repositories;
+using Proyecto_web_MVC_1P.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,25 @@ builder.Services.AddControllers();
 // Add API Explorer for Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register Repositories
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<ICompraRepository, CompraRepository>();
+
+// Register Services
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+// Add CORS policy for mobile app
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMobileApp", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -36,6 +58,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Use CORS
+app.UseCors("AllowMobileApp");
 
 app.UseAuthorization();
 
