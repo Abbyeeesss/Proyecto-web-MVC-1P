@@ -6,9 +6,9 @@ using Proyecto_web_MVC_1P.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar Entity Framework
+// Configurar Entity Framework con SQLite
 builder.Services.AddDbContext<ProyectoWebMVCP1Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ProyectoWebMVCP1Context") ?? throw new InvalidOperationException("Connection string 'ProyectoWebMVCP1Context' not found.")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("ProyectoWebMVCP1Context") ?? throw new InvalidOperationException("Connection string 'ProyectoWebMVCP1Context' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -27,6 +27,9 @@ builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 
 // Register Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<ICompraService, CompraService>();
+builder.Services.AddScoped<IFileService, FileService>(); // Asegúrate de que este servicio esté registrado
 
 // Add CORS policy for mobile app
 builder.Services.AddCors(options =>
@@ -40,6 +43,13 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ProyectoWebMVCP1Context>();
+    context.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

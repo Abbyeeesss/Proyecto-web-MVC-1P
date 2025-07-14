@@ -21,8 +21,11 @@ namespace Proyecto_web_MVC_1P.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            var proyectoWebMVCP1Context = _context.Producto.Include(p => p.Usuario);
-            return View(await proyectoWebMVCP1Context.ToListAsync());
+            var productos = _context.Producto
+                .Include(p => p.Usuario)  // Esto carga los datos del usuario
+                .OrderByDescending(p => p.FechaPublicacion);  // Ordena por fecha más reciente
+
+            return View(await productos.ToListAsync());
         }
 
         // GET: Productos/Details/5
@@ -56,14 +59,30 @@ namespace Proyecto_web_MVC_1P.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UsuarioId,NombreProducto,Descripcion,Precio,TipoProducto,Categoria,ImagenUrl,FechaPublicacion,Disponibilidad")] Producto producto)
+        public async Task<IActionResult> Create([Bind("Id,UsuarioId,NombreProducto,Descripcion,Precio,TipoProducto,Categoria,ImagenUrl,Disponibilidad")] Producto producto)
         {
             if (ModelState.IsValid)
             {
+                // Establecer la fecha de publicación automáticamente
+                producto.FechaPublicacion = DateTime.Now;
+
+                // Si no hay imagen, poner una por defecto
+                if (string.IsNullOrEmpty(producto.ImagenUrl))
+                {
+                    producto.ImagenUrl = "/images/no-image.png";
+                }
+
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Si hay errores, mostrar qué está mal
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"Error: {error.ErrorMessage}");
+            }
+
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "NombreUsuario", producto.UsuarioId);
             return View(producto);
         }

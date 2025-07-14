@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,41 +10,40 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Proyecto_web_MVC_1P.Migrations
 {
     [DbContext(typeof(ProyectoWebMVCP1Context))]
-    [Migration("20250428025652_Primera Migracion")]
-    partial class PrimeraMigracion
+    [Migration("20250714003152_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
             modelBuilder.Entity("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Compra", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("FechaCompra")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ProductoId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("UsuarioId1")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductoId");
 
                     b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("Compra");
                 });
@@ -54,50 +52,53 @@ namespace Proyecto_web_MVC_1P.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Categoria")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(240)
-                        .HasColumnType("nvarchar(240)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("Disponibilidad")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("FechaPublicacion")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ImagenUrl")
                         .IsRequired()
                         .HasMaxLength(240)
-                        .HasColumnType("nvarchar(240)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NombreProducto")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<float>("Precio")
-                        .HasColumnType("real");
+                        .HasColumnType("REAL");
 
                     b.Property<string>("TipoProducto")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("UsuarioId1")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("Producto");
                 });
@@ -106,28 +107,26 @@ namespace Proyecto_web_MVC_1P.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Contraseña")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NombreUsuario")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -139,14 +138,18 @@ namespace Proyecto_web_MVC_1P.Migrations
                     b.HasOne("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Producto", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Usuario", null)
+                        .WithMany("Compras")
+                        .HasForeignKey("UsuarioId1");
 
                     b.Navigation("Producto");
 
@@ -158,10 +161,21 @@ namespace Proyecto_web_MVC_1P.Migrations
                     b.HasOne("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Usuario", null)
+                        .WithMany("Productos")
+                        .HasForeignKey("UsuarioId1");
+
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Proyecto_web_MVC_1P.Models.Proyecto_web_MVC_1P.Models.Usuario", b =>
+                {
+                    b.Navigation("Compras");
+
+                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }

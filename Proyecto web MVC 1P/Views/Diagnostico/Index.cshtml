@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Diagnóstico del Sistema";
+    var diagnostico = ViewBag.Diagnostico;
+}
+
+<div class="container">
+    <h2>Diagnóstico del Sistema</h2>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">@TempData["Mensaje"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Información de la Base de Datos</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Ruta de BD:</strong> @diagnostico.DatabasePath</p>
+                    <p><strong>Total Usuarios:</strong> @diagnostico.TotalUsuarios</p>
+                    <p><strong>Total Productos:</strong> @diagnostico.TotalProductos</p>
+                    <p><strong>Total Compras:</strong> @diagnostico.TotalCompras</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Últimos Productos</h5>
+                </div>
+                <div class="card-body">
+                    @if (diagnostico.UltimosProductos.Count > 0)
+                    {
+                        <ul class="list-group">
+                            @foreach (var producto in diagnostico.UltimosProductos)
+                            {
+                                <li class="list-group-item">
+                                    <strong>ID @producto.Id:</strong> @producto.NombreProducto
+                                    <br><small>Usuario: @producto.Usuario | Fecha: @producto.FechaPublicacion</small>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No hay productos en la base de datos</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Acciones de Diagnóstico</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CrearProductoPrueba" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-primary">Crear Producto de Prueba</button>
+                    </form>
+
+                    <a href="/api/ProductosApi" target="_blank" class="btn btn-info">Ver API de Productos</a>
+                    <a href="/Productos" class="btn btn-secondary">Ver Lista Web</a>
+                    <a href="/swagger" target="_blank" class="btn btn-warning">Abrir Swagger</a>
+
+                    <form asp-action="LimpiarDatos" method="post" style="display: inline;"
+                          onsubmit="return confirm('¿Estás seguro de que quieres eliminar TODOS los datos?')">
+                        <button type="submit" class="btn btn-danger">Limpiar Todos los Datos</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Enlaces Rápidos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="/Usuarios" class="btn btn-outline-primary w-100">Gestionar Usuarios</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Productos" class="btn btn-outline-primary w-100">Gestionar Productos</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Compras" class="btn btn-outline-primary w-100">Gestionar Compras</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/swagger" target="_blank" class="btn btn-outline-primary w-100">API Documentation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
